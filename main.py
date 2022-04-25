@@ -2,10 +2,17 @@ from mac_vendor_lookup import MacLookup
 from scapy.all import Ether, ARP, srp
 import sys
 import re
+from rich.progress import track
+from rich.table import Table
+from rich.console import Console
 
-print("Updating Vendors...")
 macobj = MacLookup()
-macobj.update_vendors()
+tableobj = Table(title="Devices discovered in this local network")
+tableobj.add_column("IP Address",style="cyan")
+tableobj.add_column("MAC Address",style="magenta")
+tableobj.add_column("Manufacturer",style="green")
+for i in track(range(1),description="Updating Vendors ..."):
+    macobj.update_vendors()
 
 iprange = input("Enter your private IP (eg. 100.10.1.1/24): ")
 if not bool(re.match(r"\d{,3}\.\d{,3}\.\d{,3}\.\d{,3}/\d{1,2}",iprange)):
@@ -23,6 +30,9 @@ except PermissionError:
 
 for sent,received in result:
     try:
-        print(f"IP: {received.psrc}      MAC: {received.hwsrc}      Manufacturer: {macobj.lookup(received.hwsrc)}")
+        tableobj.add_row(received.psrc,received.hwsrc,macobj.lookup(received.hwsrc))
     except:
-        print(f"IP: {received.psrc}      MAC: {received.hwsrc}      Manufacturer: UNKNOWN")
+        tableobj.add_row(received.psrc,received.hwsrc,"UNKNOWN")
+
+consoleobj = Console()
+consoleobj.print(tableobj)
