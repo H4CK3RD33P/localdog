@@ -5,7 +5,17 @@ import re
 from rich.progress import track
 from rich.table import Table
 from rich.console import Console
+import pyfiglet
+from rich.markdown import Markdown
 
+print(pyfiglet.figlet_format("L o c a l  D o g"))
+consoleobj = Console()
+#print(pyfiglet.figlet_format("By Subhodeep Sarkar",font='bubble'))
+markdownobj = Markdown('''
+**By *Subhodeeep Sarkar***
+''')
+consoleobj.print(markdownobj)
+print()
 macobj = MacLookup()
 tableobj = Table(title="Devices discovered in this local network")
 tableobj.add_column("IP Address",style="cyan")
@@ -34,5 +44,5 @@ for sent,received in result:
     except:
         tableobj.add_row(received.psrc,received.hwsrc,"UNKNOWN")
 
-consoleobj = Console()
+print()
 consoleobj.print(tableobj)
