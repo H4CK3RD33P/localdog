@@ -1,0 +1,4 @@
+rich==11.2.0
+mac-vendor-lookup==0.1.12
+scapy==2.4.5
+pyfiglet==0.8.post1
